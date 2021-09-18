@@ -89,8 +89,10 @@ export default function Course(props) {
         
         read({courseId: props.match.params.courseId}, signal).then(data => {
             if(data.error) {
+                console.log("error", data.error)
                 setValues({...values, error: data.error})
             } else {
+                console.log({data})
                 setCourse(data)
             }
         })

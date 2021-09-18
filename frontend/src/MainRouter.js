@@ -1,5 +1,6 @@
 import React from 'react'
 import {Route, Switch} from 'react-router-dom'
+import Profile from './user/Profile';
 import EditProfile from './user/EditProfile';
 import PrivateRoute from './auth/PrivateRoute';
 import Signin from './auth/Signin';
@@ -19,13 +20,16 @@ const MainRouter = () => {
                 <Route exact path="/" component={Home} />
                 <Route path="/signup" component={Signup}/>
                 <Route path="/signin" component={Signin} />
+                <Route path="/user/:userId" component={Profile} />
                 <Route path="/course/:courseId" component={Course} />
-                <PrivateRoute path="/teach/course/edit/:courseId" component={EditCourse} />
-                <PrivateRoute path="/seller/courses" component={ListByInstructor} />
-                <PrivateRoute path="/teach/course/new" component={NewCourse} />
                 <PrivateRoute path="/user/edit/:userId" component={EditProfile} />
+                <PrivateRoute path="/teach/course/edit/:courseId" component={EditCourse} />
+                <PrivateRoute path="/teach/courses" component={ListByInstructor} />
+                <PrivateRoute path="/teach/course/:courseId" component={Course}/>
+                <PrivateRoute path="/teach/course/new" component={NewCourse} />
             </Switch>
         </div>
     )
 }
+
 export default MainRouter

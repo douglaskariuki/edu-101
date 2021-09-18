@@ -43,7 +43,9 @@ const read = async (params, signal) => {
             }
         })
 
-        return await response.json()
+        const res = await response.json()
+        console.log({res})
+        return res
     } catch (error) {
         console.log(error)
     }

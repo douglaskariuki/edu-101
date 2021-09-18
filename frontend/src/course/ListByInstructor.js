@@ -65,7 +65,7 @@ export default function ListByInstructor() {
 
     return (
         <div>
-            <Paper className={mergeClasses.root} elevation={4}>
+            <Paper className={classes.root} elevation={4}>
                 <Typography type="title" className={classes.title}>
                     Your Courses
 

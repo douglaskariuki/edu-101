@@ -7,7 +7,7 @@ import TextField from '@material-ui/core/TextField'
 import Typography from '@material-ui/core/Typography'
 import Icon from '@material-ui/core/Icon'
 import { makeStyles } from '@material-ui/core/styles'
-import auth from './../auth/auth-helper'
+import auth from './auth-helper'
 import {Redirect} from 'react-router-dom'
 import {signin} from './api-auth.js'
 
@@ -47,20 +47,20 @@ export default function Signin(props) {
     })
 
     const clickSubmit = () => {
-    const user = {
-        email: values.email || undefined,
-        password: values.password || undefined
-    }
+      const user = {
+          email: values.email || undefined,
+          password: values.password || undefined
+      }
 
-    signin(user).then((data) => {
-        if (data.error) {
-        setValues({ ...values, error: data.error})
-        } else {
-        auth.authenticate(data, () => {
-            setValues({ ...values, error: '',redirectToReferrer: true})
-        })
-        }
-    })
+      signin(user).then((data) => {
+          if (data.error) {
+          setValues({ ...values, error: data.error})
+          } else {
+          auth.authenticate(data, () => {
+              setValues({ ...values, error: '',redirectToReferrer: true})
+          })
+          }
+      })
     }
 
     const handleChange = name => event => {

@@ -49,15 +49,15 @@ export default function EditProfile(props) {
         name: '',
         password: '',
         email: '',
-        id: '',
         open: false,
         error: '',
+        id: '',
         redirectToProfile: false,
         educator: false
     })
 
-    const userId = props.match.params.userId;
     const jwt = auth.isAuthenticated()
+    const userId = props.match.params.userId;
 
     useEffect(() => {
         const abortController = new AbortController() 
@@ -65,7 +65,7 @@ export default function EditProfile(props) {
 
         const signal = abortController.signal
 
-        read({userId}, {t: jwt.token}, signal).then((data) => {
+        read({userId: userId}, {t: jwt.token}, signal).then((data) => {
             if(data && data.error) {
                 setValues({ 
                     ...values, 
@@ -97,7 +97,7 @@ export default function EditProfile(props) {
         }
 
         update({
-            userId
+            userId: userId
         }, {
             t: jwt.token
         }, user).then((data) => {
@@ -134,25 +134,6 @@ export default function EditProfile(props) {
                 </Typography>
 
                 <br />
-
-                <input
-                    accept="image/*" 
-                    onChange={handleChange('photo')}
-                    className={classes.input}
-                    style={{display: 'none'}}  // hide input element from view
-                    id="icon-button-file"
-                    type="file"
-                />
-
-                <label htmlFor="icon-button-file">
-                    <Button variant="contained" color="default" component="span">
-                        Upload
-                        <FileUpload />
-                    </Button>
-                </label>
-                <span className={classes.filename}>{values.photo ? values.photo.name : ''}</span>
-                
-                <br/>
 
                 <TextField 
                     id="name" 
