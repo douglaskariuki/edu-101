@@ -1,4 +1,3 @@
-import express from "express";
 import mongoose from "mongoose";
 import config from "./config/config.js";
 import app from "./express.js";
@@ -8,9 +7,12 @@ mongoose.connect(config.mongoUri, {
     useNewUrlParser: true,
     useCreateIndex: true,
     useUnifiedTopology: true
-})
-mongoose.connection.on("error", () => {
-    throw new Error(`unable to connect to database: ${config.mongoUri}`)
+}).then((conn, error) => {
+    if(error) {
+        console.log(`Error: ${error}`)
+    }
+
+    console.log("connected")
 })
 
 app.listen(config.port, (err) => {

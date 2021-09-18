@@ -31,7 +31,7 @@ const UserSchema = new mongoose.Schema({
     },
     educator: {
         type: Boolean,
-        default: false
+        default: true
     },
     updated: Date,
 });

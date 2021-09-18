@@ -43,6 +43,8 @@ router.route('/api/courses/:courseId')
     .put(authController.requireSignin, courseController.isInstructor, courseController.update)
 
 router.route('/api/courses/:courseId')
+    .get(courseController.read)
+    .put(authController.requireSignin, courseController.isInstructor, courseController.update)
     .delete(authController.requireSignin, courseController.isInstructor, courseController.remove)
 
 router.param('courseId', courseController.courseById)

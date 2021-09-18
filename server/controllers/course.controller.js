@@ -34,23 +34,6 @@ const create = async (req, res) => {
     })
 }
 
-const listByInstructor = (req, res) => {
-    Course.find({instructor: req.profile._id}, (err, courses) => {
-        if(err) {
-            return res.status(400).json({
-                error: errorHandler.getErrorMessage(err)
-            })
-        }
-
-        res.json(courses)
-    }).populate('instructor', '_id name')
-}
-
-const read = (req, res) => {
-    req.course.image = undefined; // images will be retrieved as files in separate routes
-    return res.json(req.course)
-}
-
 const courseById = async (req, res, next, id) => {
     try {
         let course = await Course.findById(id).populate('_id name')
@@ -60,6 +43,8 @@ const courseById = async (req, res, next, id) => {
                 error: 'Course not found'
             })
         }
+        
+        console.log(course)
 
         req.course = course
         next()
@@ -70,38 +55,10 @@ const courseById = async (req, res, next, id) => {
     }
 }
 
-const isInstructor = (req, res, next) => {
-    const isInstructor = 
-        req.course && req.auth 
-        && req.course.instructor._id == req.auth._id
-
-    if(!isInstructor) {
-        return res.status('403').json({
-            error: 'User is not authorized'
-        })
-    }
-
-    next()
-}
-
-const newLesson = async (req, res, next) => {
-    try {
-        let lesson = req.body.lesson
-        let result = await Course.findByIdAndUpdate(
-            req.course._id, 
-            {
-                $push: {lessons: lesson}, 
-                updated: Date.now()
-            }, 
-            {new: true}
-        ).populate('instructor', '_id name').exec()
-
-        res.json(result)
-    } catch (error) {
-        return res.status(400).json({
-            error: errorHandler.getErrorMessage(error)
-        })
-    }
+const read = (req, res) => {
+    req.course.image = undefined; // images will be retrieved as files in separate routes
+    console.log(req.course)
+    return res.json(req.course)
 }
 
 const update = (req, res) => {
@@ -136,6 +93,52 @@ const update = (req, res) => {
             })
         }
     })
+}
+
+const listByInstructor = (req, res) => {
+    Course.find({instructor: req.profile._id}, (err, courses) => {
+        if(err) {
+            return res.status(400).json({
+                error: errorHandler.getErrorMessage(err)
+            })
+        }
+
+        res.json(courses)
+    }).populate('instructor', '_id name')
+}
+
+const isInstructor = (req, res, next) => {
+    const isInstructor = 
+        req.course && req.auth 
+        && req.course.instructor._id == req.auth._id
+
+    if(!isInstructor) {
+        return res.status('403').json({
+            error: 'User is not authorized'
+        })
+    }
+
+    next()
+}
+
+const newLesson = async (req, res, next) => {
+    try {
+        let lesson = req.body.lesson
+        let result = await Course.findByIdAndUpdate(
+            req.course._id, 
+            {
+                $push: {lessons: lesson}, 
+                updated: Date.now()
+            }, 
+            {new: true}
+        ).populate('instructor', '_id name').exec()
+
+        res.json(result)
+    } catch (error) {
+        return res.status(400).json({
+            error: errorHandler.getErrorMessage(error)
+        })
+    }
 }
 
 const getImage = (req, res, next) => {
