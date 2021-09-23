@@ -29,18 +29,12 @@ router.route('/api/courses/by/:userId')
         courseController.listByInstructor
     )
 
-router.route('/api/courses/:courseId')
-    .get(courseController.read)
-
 router.route('/api/courses/:courseId/lesson/new')
     .put(
         authController.requireSignin, 
         courseController.isInstructor, 
         courseController.newLesson
     )
-
-router.route('/api/courses/:courseId')
-    .put(authController.requireSignin, courseController.isInstructor, courseController.update)
 
 router.route('/api/courses/:courseId')
     .get(courseController.read)

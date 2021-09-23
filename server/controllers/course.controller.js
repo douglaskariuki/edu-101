@@ -36,7 +36,7 @@ const create = async (req, res) => {
 
 const courseById = async (req, res, next, id) => {
     try {
-        let course = await Course.findById(id).populate('_id name')
+        let course = await Course.findById(id).populate('instructor', '_id name')
 
         if(!course) {
             return res.status('400').json({
