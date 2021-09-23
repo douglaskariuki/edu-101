@@ -22,11 +22,11 @@ const MainRouter = () => {
                 <Route path="/signin" component={Signin} />
                 <Route path="/user/:userId" component={Profile} />
                 <Route path="/course/:courseId" component={Course} />
-                <PrivateRoute path="/user/edit/:userId" component={EditProfile} />
+                <PrivateRoute exact path="/user/edit/:userId" component={EditProfile} />
+                <PrivateRoute exact path="/teach/course/new" component={NewCourse} />
                 <PrivateRoute path="/teach/course/edit/:courseId" component={EditCourse} />
                 <PrivateRoute path="/teach/courses" component={ListByInstructor} />
-                <PrivateRoute path="/teach/course/:courseId" component={Course}/>
-                <PrivateRoute path="/teach/course/new" component={NewCourse} />
+                <PrivateRoute exact path="/teach/course/:courseId" component={Course}/>
             </Switch>
         </div>
     )

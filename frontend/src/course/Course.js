@@ -10,7 +10,8 @@ import auth from './../auth/auth-helper'
 import { read } from './api-course.js'
 import {Link} from "react-router-dom"
 import NewLesson from './NewLesson'
-import { Avatar, Divider, List, ListItem, ListItemAvatar, ListItemText } from '@material-ui/core'
+import { Avatar, Button, Divider, List, ListItem, ListItemAvatar, ListItemText } from '@material-ui/core'
+import DeleteCourse from "./DeleteCourse"
 
 const useStyles = makeStyles(theme => ({
     root: theme.mixins.gutters({
@@ -83,6 +84,8 @@ export default function Course(props) {
         error: ''
     })
 
+    const jwt = auth.isAuthenticated()
+
     useEffect(() => {
         const abortController = new AbortController()
         const signal = abortController.signal
@@ -110,6 +113,14 @@ export default function Course(props) {
         setCourse(course)
     }
 
+    const removeCourse = () => {
+
+    }
+
+    const clickPublish = () => {
+        
+    }
+
     return (
         <div className={classes.root}>
             <Card className={classes.card}>
@@ -117,29 +128,52 @@ export default function Course(props) {
                     title={course.name}
                     subheader={
                         <div>
-                            <Link to={`/user/${course.instructor._id}`} className={classes.sub}>By {course.instructor.name}</Link>
-                            <span className={classes.category}>{course.category}</span>
+                            <Link 
+                                to={`/user/${course.instructor._id}`}
+                                className={classes.sub}
+                            >
+                                By {course.instructor.name}
+                            </Link>
+
+                            <span className={classes.category}>
+                                {course.category}
+                            </span>
                         </div>
+                    }
+
+                    action = {
+                        <>
+                            {auth.isAuthenticated().user && auth.isAuthenticated().user._id == course.instructor._id && (
+                                <span>
+                                    <Link to={`/teach/course/edit/${course._id}`}>
+                                        <IconButton aria-label="Edit" color="secondary">
+                                            <Edit />
+                                        </IconButton>
+                                    </Link>
+
+                                    {!course.published ? (
+                                        <>
+                                            <Button 
+                                                color="secondary"
+                                                variant="outlined"
+                                                onClick={clickPublish}>{course.lessons.length == 0 ? "Add atleast 1 lesson to publish" : "Publish"}</Button>
+                                            
+                                            <DeleteCourse
+                                                course={course}
+                                                onRemove={removeCourse}
+                                            />
+                                        </>
+                                    ) : (
+                                    <Button color="primary" variant="outlined">Published</Button>
+                                    )}
+                                </span>
+                            )}
+                        </>
                     }
                 />
 
-                {auth.isAuthenticated().user && auth.isAuthenticated().user._id == course.instructor._id && (
-                    <span>
-                        <Link to={`/teach/course/edit/${course._id}`}>
-                            <IconButton aria-label="Edit" color="secondary">
-                                <Edit />
-                            </IconButton>
-                        </Link>
-
-                        {!course.published ? (
-                            <>
-                                <NewLesson courseId={course._id} addLesson={addLesson} />
-                            </>
-                        ) : null}
-                    </span>
-                )}
-
-                <CardMedia 
+                <CardMedia
+                    className={classes.media}
                     image={imageUrl}
                     title={course.name}
                 />

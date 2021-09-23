@@ -53,7 +53,7 @@ const read = async (params, signal) => {
 
 const newLesson = async (params, credentials, lesson) => {
     try {
-        let response = await fetch(`/api/courses/${params.courseId}/course/new`, {
+        let response = await fetch(`/api/courses/${params.courseId}/lesson/new`, {
             method: 'PUT',
             headers: {
                 'Accept': 'application/json',
@@ -86,4 +86,21 @@ const update = async (params, credentials, course) => {
     }
 }
 
-export { create, listByInstructor, read, newLesson, update }
+const remove = async (params, credentials) => {
+    try {
+        let response = await fetch(`/api/courses/${params.courseId}`, {
+            method: 'DELETE',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + credentials.t
+            }
+        })
+
+        return await response.json()
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+export { create, listByInstructor, read, newLesson, remove, update }

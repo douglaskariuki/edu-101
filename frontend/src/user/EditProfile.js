@@ -4,8 +4,6 @@ import React, { useState, useEffect } from 'react'
 import { Redirect } from "react-router-dom"
 import auth from '../auth/auth-helper'
 import { read, update } from './api-user'
-import FileUpload from '@material-ui/icons/AddPhotoAlternate'
-import Avatar from '@material-ui/core/Avatar'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
 import Switch from '@material-ui/core/Switch'
 import Button from '@material-ui/core/Button'
@@ -51,7 +49,6 @@ export default function EditProfile(props) {
         email: '',
         open: false,
         error: '',
-        id: '',
         redirectToProfile: false,
         educator: false
     })
@@ -66,7 +63,8 @@ export default function EditProfile(props) {
         const signal = abortController.signal
 
         read({userId: userId}, {t: jwt.token}, signal).then((data) => {
-            if(data && data.error) {
+            if (data && data.error) {
+                console.log('error', data.error)
                 setValues({ 
                     ...values, 
                     error: data.error 

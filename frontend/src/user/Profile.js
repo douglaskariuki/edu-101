@@ -44,6 +44,7 @@ export default function Profile(props) {
             userId: props.match.params.userId
         }, {t: jwt.token}, signal).then((data) => {
             if(data && data.error) {
+                console.log(data.error)
                 setRedirectToSignin(true)
             } else {
                 setUser(data)
