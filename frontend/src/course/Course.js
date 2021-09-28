@@ -7,10 +7,10 @@ import IconButton from '@material-ui/core/IconButton'
 import Edit from '@material-ui/icons/Edit'
 import {makeStyles} from '@material-ui/core/styles'
 import auth from './../auth/auth-helper'
-import { read } from './api-course.js'
+import { read, update } from './api-course.js'
 import {Link} from "react-router-dom"
 import NewLesson from './NewLesson'
-import { Avatar, Button, Divider, List, ListItem, ListItemAvatar, ListItemText } from '@material-ui/core'
+import { Avatar, Dialog, DialogActions, DialogTitle, DialogContent, Button, Divider, List, ListItem, ListItemAvatar, ListItemText } from '@material-ui/core'
 import DeleteCourse from "./DeleteCourse"
 
 const useStyles = makeStyles(theme => ({
@@ -79,6 +79,7 @@ const useStyles = makeStyles(theme => ({
 export default function Course(props) {
     const classes = useStyles();
 
+    const [open, setOpen] = useState(false);
     const [course, setCourse] = useState({ instructor: {} })
     const [values, setValues] = useState({
         error: ''
@@ -118,7 +119,31 @@ export default function Course(props) {
     }
 
     const clickPublish = () => {
-        
+        if(course.lessons.length > 0) {
+            setOpen(true)
+        }
+    }
+
+    const handleClose = () => {
+        setOpen(false)
+    }
+
+    const publish = () => {
+        let courseData = new FormData()
+        courseData.append('published', true)
+
+        update({
+            courseId: props.match.params.courseId
+        }, {
+            t: jwt.token
+        }, courseData).then((data) => {
+            if (data && data.error) {
+                setValues({...values, error: data.error})
+            } else {
+                setCourse({ ...course, published: true })
+                setOpen(false)
+            }
+        })
     }
 
     return (
@@ -243,6 +268,29 @@ export default function Course(props) {
                 </List>
 
             </Card>
+
+            <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
+                <DialogTitle id="form-dialog-title">Publish Course</DialogTitle>
+            
+                <DialogContent>
+                    <Typography variant="body1">
+                        Publishing your course will make it live to students for enrollment.
+                    </Typography>
+                    <Typography variant="body1">
+                        Make sure all lessons are added and ready for publishing.
+                    </Typography>
+
+                    <DialogActions>
+                        <Button onClick={handleClose} color="primary" variant="contained">
+                            Cancel
+                        </Button>
+
+                        <Button onClick={publish} color="secondary" variant="contained">
+                            Publish
+                        </Button>
+                    </DialogActions>
+                </DialogContent>
+            </Dialog>
         </div>
     )
 }

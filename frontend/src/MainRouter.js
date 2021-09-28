@@ -11,6 +11,7 @@ import NewCourse from './course/NewCourse';
 import ListByInstructor from './course/ListByInstructor';
 import Course from './course/Course';
 import EditCourse from './course/EditCourse';
+import Enrollment from './enrollment/Enrollment';
 
 const MainRouter = () => {
     return ( 
@@ -27,6 +28,7 @@ const MainRouter = () => {
                 <PrivateRoute path="/teach/course/edit/:courseId" component={EditCourse} />
                 <PrivateRoute path="/teach/courses" component={ListByInstructor} />
                 <PrivateRoute exact path="/teach/course/:courseId" component={Course}/>
+                <PrivateRoute path="/learn/:enrollmentId" component={Enrollment}/>
             </Switch>
         </div>
     )
