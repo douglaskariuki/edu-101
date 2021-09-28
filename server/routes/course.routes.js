@@ -5,6 +5,9 @@ import courseController from "../controllers/course.controller";
 
 const router = express.Router()
 
+router.route('/api/courses/published')
+    .get(courseController.listPublished)
+
 router.route('/api/courses/by/:userId')
     .post(
         authController.requireSignin, 

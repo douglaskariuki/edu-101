@@ -141,6 +141,17 @@ const newLesson = async (req, res, next) => {
     }
 }
 
+const listPublished = (req, res) => {
+  Course.find({published: true}, (err, courses) => {
+    if (err) {
+      return res.status(400).json({
+        error: errorHandler.getErrorMessage(err)
+      })
+    }
+    res.json(courses)
+  }).populate('instructor', '_id name')
+}
+
 const getImage = (req, res, next) => {
     if(req.course.image.data) {
         res.set("Content-Type", req.course.image.contentType)
@@ -166,4 +177,4 @@ const defaultPhoto = (req, res) => {
     return res.sendFile(process.cwd()+defaultImage)
 }
 
-export default {create, getImage, update, remove, newLesson, isInstructor, defaultPhoto, listByInstructor, read, courseById}
+export default {create, getImage, listPublished, update, remove, newLesson, isInstructor, defaultPhoto, listByInstructor, read, courseById}

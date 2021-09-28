@@ -8,6 +8,7 @@ import helmet from 'helmet';
 import authRoutes from "./routes/auth.routes.js";
 import userRoutes from "./routes/user.routes.js";
 import courseRoutes from "./routes/course.routes.js";
+import enrollmentRoutes from "./routes/enrollment.routes.js";
 
 const CURRENT_WORKING_DIR = process.cwd();
 
@@ -23,6 +24,7 @@ app.use(cors())
 app.use('/', authRoutes)
 app.use('/', userRoutes)
 app.use('/', courseRoutes)
+app.use('/', enrollmentRoutes)
 
 // Auth error handling for express-jwt, unauthorized errors
 app.use((err, req, res, next) => {
