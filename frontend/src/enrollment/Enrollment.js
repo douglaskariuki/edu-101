@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import auth from './../auth/auth-helper';
 import PropTypes from "prop-types";
-import { read } from './api-enrollment';
+import { complete, read } from './api-enrollment';
 import { Avatar, Button, Card, CardActions, CardContent, CardHeader, CardMedia, Divider, Drawer, List, ListItem, ListItemAvatar, ListItemIcon, ListItemSecondaryAction, ListItemText, ListSubheader, Typography } from '@material-ui/core';
 import Info from '@material-ui/icons/Info'
 import CheckCircle from '@material-ui/icons/CheckCircle'
@@ -144,8 +144,40 @@ export default function Enrollment(props) {
         setValues({...values, drawer: index})
     }
 
-    const markComplete = () => {
+    const totalCompleted = (lessons) => {
+        let count = lessons.reduce((total, lessonStatus) => {
+            return total + (lessonStatus.complete ? 1 : 0)
+        }, 0)
+        // find and tally the count for the completed lessons in the lessonStatus array
+        
+        setTotalComplete(count)
+        return count
+    }
 
+    const markComplete = () => {
+        if (!enrollment.lessonStatus[values.drawer].complete) {
+            const lessonStatus = enrollment.lessonStatus
+            lessonStatus[values.drawer].complete = true
+            let count = totalCompleted(lessonStatus)
+            let updatedData = {} // prepare the values to be sent with the req
+            updatedData.lessonStatusId = lessonStatus[values.drawer]._id
+            updatedData.complete = true
+            if (count == lessonStatus.length) { 
+                updatedData.courseCompleted = Date.now()
+            }
+
+            complete({
+                enrollmentId: props.match.params.enrollmentId
+            }, {
+                t: jwt.token
+            }, updatedData).then((data) => {
+                if (data && data.error) {
+                    setValues({...values, error: data.error})
+                } else {
+                    setEnrollment({...enrollment, lessonStatus: lessonStatus})
+                }
+            })
+        }
     }
 
     const imageUrl = enrollment.course._id
@@ -262,10 +294,17 @@ export default function Enrollment(props) {
                                 totalComplete == enrollment.lessonStatus.length && (
                                     <span className={classes.action}>
                                         <Button
-                                            variant="contained"
+                                            onClick={markComplete}
+                                            variant={
+                                                enrollment.lessonStatus[values.drawer].complete
+                                                    ? 'contained'
+                                                    : 'outlined'
+                                            }
                                             color="secondary"
                                         >
-                                            <CheckCircle /> &nbsp; Completed
+                                            {enrollment.lessonStatus[values.drawer].complete
+                                                ? "Completed" : "Mark As Complete"
+                                            }                                            
                                         </Button>
                                     </span>
                                 )

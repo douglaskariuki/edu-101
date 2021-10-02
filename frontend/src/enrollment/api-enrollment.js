@@ -32,6 +32,24 @@ const read = async (params, credentials, signal) => {
     }
 }
 
+const complete = async (params, credentials, enrollment) => {
+  try {
+    let response = await fetch(`/api/enrollment/complete/${params.enrollmentId}`, {
+      method: 'PUT',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + credentials.t
+      },
+      body: JSON.stringify(enrollment)
+    })
+
+    return await response.json()
+  } catch (error) {
+    console.log(error)
+  }
+}
+
 const listEnrolled = async (credentials, signal) => {
     try {
       let response = await fetch('/api/enrollment/enrolled', {
@@ -48,7 +66,25 @@ const listEnrolled = async (credentials, signal) => {
     }
 }
 
+const enrollmentStats = async (params, credentials, signal) => {
+  try {
+      let response = await fetch('/api/enrollment/stats/'+params.courseId, {
+        method: 'GET',
+        headers: {
+            'Accept': 'application/json',
+            'Authorization': 'Bearer ' + credentials.t
+        },
+        signal: signal,
+      })
+      return await response.json()
+    } catch(err) {
+      console.log(err)
+    }
+}
+
 export {
+  complete,
+  enrollmentStats,
   create,
   read,
   listEnrolled

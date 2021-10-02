@@ -6,12 +6,15 @@ import Typography from '@material-ui/core/Typography'
 import IconButton from '@material-ui/core/IconButton'
 import Edit from '@material-ui/icons/Edit'
 import {makeStyles} from '@material-ui/core/styles'
+import PeopleIcon from '@material-ui/icons/Group'
+import CompletedIcon from '@material-ui/icons/VerifiedUser'
 import auth from './../auth/auth-helper'
 import { read, update } from './api-course.js'
 import {Link} from "react-router-dom"
 import NewLesson from './NewLesson'
 import { Avatar, Dialog, DialogActions, DialogTitle, DialogContent, Button, Divider, List, ListItem, ListItemAvatar, ListItemText } from '@material-ui/core'
 import DeleteCourse from "./DeleteCourse"
+import {enrollmentStats} from "../enrollment/api-enrollment.js"
 
 const useStyles = makeStyles(theme => ({
     root: theme.mixins.gutters({
@@ -84,6 +87,7 @@ export default function Course(props) {
     const [values, setValues] = useState({
         error: ''
     })
+    const [stats, setStats] = useState({})
 
     const jwt = auth.isAuthenticated()
 
@@ -104,6 +108,24 @@ export default function Course(props) {
         return () => {
             abortController.abort()
         }
+    }, [props.match.params.courseId])
+
+    useEffect(() => {
+        const abortController = new AbortController()
+        const signal = abortController.signal
+
+        enrollmentStats(
+            { courseId: props.match.params.courseId },
+            { t: jwt.token },
+            signal
+        ).then((data) => {
+            if (data.error) {
+                setValues({...values, error: data.error})
+            } else {
+                setStats(data)
+            }
+        })
+
     }, [props.match.params.courseId])
 
     const imageUrl = course._id 
@@ -190,6 +212,18 @@ export default function Course(props) {
                                         </>
                                     ) : (
                                     <Button color="primary" variant="outlined">Published</Button>
+                                    )}
+
+                                    {course.published && (
+                                        <div>
+                                            <span className={classes.statSpan}>
+                                                <PeopleIcon /> {stats.totalEnrolled} enrolled
+                                            </span>
+
+                                            <span className={classes.statSpan}>
+                                                <CompletedIcon /> {stats.totalCompleted} completed
+                                            </span>
+                                        </div>
                                     )}
                                 </span>
                             )}
