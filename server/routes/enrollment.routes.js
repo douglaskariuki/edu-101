@@ -18,6 +18,22 @@ router.route('/api/enrollment/:enrollmentId')
         enrollmentController.isStudent,
         enrollmentController.read
     )
+
+router.route('/api/enrollment/complete/:enrollmentId')
+    .put(
+        authController.requireSignin,
+        enrollmentController.isStudent,
+        enrollmentController.complete
+    )
+
+router.route('/api/enrollment/enrolled')
+    .get(
+        authController.requireSignin,
+        enrollmentController.listEnrolled
+    )
+
+router.route('/api/enrollment/stats/:courseId')
+    .get(enrollmentController.enrollmentStats)
     
 router.param('enrollmentId', enrollmentController.enrollmentById)
 
