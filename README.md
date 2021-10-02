@@ -1,0 +1,1 @@
+An online classroom application where users can: 1) Have multiple roles including educators and students 2) Add and publish courses with lessons as an instructor and enroll on courses and complete lessons as a student 3) Keep track of course completion progress and enrollment statistics
